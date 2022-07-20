@@ -4,6 +4,8 @@ const express = require('express')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 
+const bucketName = 'digital-bucket-prod'
+
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -35,7 +37,7 @@ app.get('/', async (req, res) => {
 
 })
 
-app.post('/terserahlah', async (req, res) => {
+app.post(`/${bucketName}`, async (req, res) => {
     
     if (req.files === null) {
         res.status(400)
@@ -47,7 +49,7 @@ app.post('/terserahlah', async (req, res) => {
     const file = req.files.file
     console.log(file)
 
-    mc.putObject('terserahlah', file.name, file.data, file.size, function(err, objInfo) {
+    mc.putObject(bucketName, file.name, file.data, file.size, function(err, objInfo) {
         if(err) {
             console.log(err)
 
