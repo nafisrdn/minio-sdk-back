@@ -4,7 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 
-const { MinIOClient } = require('./models/MinIOClient')
+const baseRoute = require('./routes/base.route')
 
 const bucketName = 'digital-bucket-prod'
 
@@ -17,64 +17,58 @@ app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get('/test', async (req, res) => {
-    const mc = new MinIOClient('nafisrf1', 'nafisrf1123')
+app.use('/', baseRoute)
 
-    const buckets = await mc.listBuckets()
+// app.get('/', async (req, res) => {
+//     console.log('listing buckets...')
 
-    res.send(buckets)
-})
+//     const {accessKey, secretKey} = req.body
 
-app.get('/', async (req, res) => {
-    console.log('listing buckets...')
+//     const mc = new Minio.Client({
+//         endPoint: process.env.MINIO_END_POINT,
+//         port: parseInt(process.env.MINIO_PORT),
+//         useSSL: (process.env.MINIO_USE_SSL === 'true'),
+//         accessKey: accessKey,
+//         secretKey: secretKey
+//     });
 
-    const {accessKey, secretKey} = req.body
+//     try {
+//         const buckets = await mc.listBuckets();
 
-    const mc = new Minio.Client({
-        endPoint: process.env.MINIO_END_POINT,
-        port: parseInt(process.env.MINIO_PORT),
-        useSSL: (process.env.MINIO_USE_SSL === 'true'),
-        accessKey: accessKey,
-        secretKey: secretKey
-    });
+//         res.send(buckets)
+//     } catch (error) {
+//         console.error(error)
+//         res.send(error)
+//     }
 
-    try {
-        const buckets = await mc.listBuckets();
+// })
 
-        res.send(buckets)
-    } catch (error) {
-        console.error(error)
-        res.send(error)
-    }
-
-})
-
-app.post(`/${bucketName}`, async (req, res) => {
+// app.post(`/${bucketName}`, async (req, res) => {
     
-    if (req.files === null) {
-        res.status(400)
-        res.send({message: 'File is empty'})
+//     if (req.files === null) {
+//         res.status(400)
+//         res.send({message: 'File is empty'})
 
-        return;
-    }
+//         return;
+//     }
 
-    const file = req.files.file
-    console.log(file)
+//     const file = req.files.file
+//     console.log(file)
 
-    mc.putObject(bucketName, file.name, file.data, file.size, function(err, objInfo) {
-        if(err) {
-            console.log(err)
+//     mc.putObject(bucketName, file.name, file.data, file.size, function(err, objInfo) {
+//         if(err) {
+//             console.log(err)
 
-            res.status(500)
-            res.send({message: err})
-        }
-     console.log("Success", objInfo)
+//             res.status(500)
+//             res.send({message: err})
+//         }
+//      console.log("Success", objInfo)
 
-     res.status(200)
-     res.send({message: 'Uploaded', ...objInfo})
-    })
+//      res.status(200)
+//      res.send({message: 'Uploaded', ...objInfo})
+//     })
 
-})
+// })
 
 
 
