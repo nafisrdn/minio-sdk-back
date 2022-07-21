@@ -4,27 +4,39 @@ const express = require('express')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 
+const { MinIOClient } = require('./models/MinIOClient')
+
 const bucketName = 'digital-bucket-prod'
 
 const app = express()
 const port = process.env.PORT || 3000
 
-const Minio = require('minio')
-
-const mc = new Minio.Client({
-    endPoint: process.env.MINIO_END_POINT,
-    port: parseInt(process.env.MINIO_PORT),
-    useSSL: (process.env.MINIO_USE_SSL === 'true'),
-    accessKey: process.env.MINIO_ACCESS_KEY,
-    secretKey: process.env.MINIO_SECRET_KEY
-});
 
 app.use(cors());
 app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.get('/test', async (req, res) => {
+    const mc = new MinIOClient('nafisrf1', 'nafisrf1123')
+
+    const buckets = await mc.listBuckets()
+
+    res.send(buckets)
+})
 
 app.get('/', async (req, res) => {
     console.log('listing buckets...')
+
+    const {accessKey, secretKey} = req.body
+
+    const mc = new Minio.Client({
+        endPoint: process.env.MINIO_END_POINT,
+        port: parseInt(process.env.MINIO_PORT),
+        useSSL: (process.env.MINIO_USE_SSL === 'true'),
+        accessKey: accessKey,
+        secretKey: secretKey
+    });
 
     try {
         const buckets = await mc.listBuckets();
