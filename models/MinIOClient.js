@@ -1,17 +1,23 @@
-const { endPoint, port, useSSL } = require("../configs/minio.config");
+const {
+  endPoint,
+  port,
+  useSSL,
+  accessKey,
+  secretKey,
+} = require("../configs/minio.config");
 
 const { Client } = require("minio");
 
 class MinIOClient extends Client {
-  constructor(accessKey, secretKey) {
+  constructor() {
     super({
       endPoint,
       port,
       useSSL,
-      accessKey,
-      secretKey,
+      accessKey: accessKey,
+      secretKey: secretKey,
     });
   }
 }
 
-exports.MinIOClient = MinIOClient
+exports.MinIOClient = MinIOClient;

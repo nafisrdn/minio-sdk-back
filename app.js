@@ -4,7 +4,8 @@ const express = require('express')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 
-const baseRoute = require('./routes/base.route')
+const bucketeRoute = require('./routes/bucket.route')
+const authRoute = require('./routes/auth.route')
 
 const bucketName = 'digital-bucket-prod'
 
@@ -17,7 +18,9 @@ app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/', baseRoute)
+app.use('/bucket', bucketeRoute)
+
+app.use('/auth', authRoute)
 
 // app.get('/', async (req, res) => {
 //     console.log('listing buckets...')

@@ -5,8 +5,8 @@ const { MinIOClient } = require("../models/MinIOClient");
 const router = Router();
 
 router.get("/", async (req, res) => {
-  const { accessKey, secretKey } = req.body;
-  const mc = new MinIOClient(accessKey, secretKey);
+    console.log(req.body);
+  const mc = new MinIOClient();
 
   try {
     const buckets = await mc.listBuckets();
@@ -19,8 +19,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:bucketName", async (req, res) => {
-  const { accessKey, secretKey } = req.body;
-  const mc = new MinIOClient(accessKey, secretKey);
+  const mc = new MinIOClient();
 
   const { bucketName } = req.params;
 
