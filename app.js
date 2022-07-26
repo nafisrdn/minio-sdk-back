@@ -1,26 +1,25 @@
-require('dotenv').config()
+require("dotenv").config();
 
-const express = require('express')
-const cors = require('cors')
-const fileUpload = require('express-fileupload')
+const express = require("express");
+const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
-const bucketeRoute = require('./routes/bucket.route')
-const authRoute = require('./routes/auth.route')
+const bucketeRoute = require("./routes/bucket.route");
+const authRoute = require("./routes/auth.route");
 
-const bucketName = 'digital-bucket-prod'
+const { MinIOClient } = require("./models/MinIOClient");
 
-const app = express()
-const port = process.env.PORT || 3000
-
+const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/bucket', bucketeRoute)
+app.use("/bucket", bucketeRoute);
 
-app.use('/auth', authRoute)
+app.use("/auth", authRoute);
 
 // app.get('/', async (req, res) => {
 //     console.log('listing buckets...')
@@ -47,7 +46,7 @@ app.use('/auth', authRoute)
 // })
 
 // app.post(`/${bucketName}`, async (req, res) => {
-    
+
 //     if (req.files === null) {
 //         res.status(400)
 //         res.send({message: 'File is empty'})
@@ -73,8 +72,7 @@ app.use('/auth', authRoute)
 
 // })
 
-
-
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`)
-})
+  console.log(`Server listening on port ${port}`);
+});
+
