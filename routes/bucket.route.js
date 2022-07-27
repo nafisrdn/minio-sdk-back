@@ -97,16 +97,14 @@ router.delete("/:bucketName", (req, res) => {
 router.get("/:bucketName/object", (req, res) => {
   const mc = new MinIOClient();
   const { bucketName } = req.params;
-  const { objectName, action } = req.query;
+  const { objectName, action, plain } = req.query;
 
-  // res.writeHead(200, {
-  //   "Content-Disposition": "attachment;filename=" + objectName,
-  // });
-
-  if (action === "view") {
-    // res.setHeader("Content-type", "image/png");
-  } else if (action === "download") {
+  if (action === "download") {
     res.setHeader("Content-disposition", "attachment; filename=" + objectName);
+  }
+
+  if (plain) {
+    res.setHeader("Content-Type", "text/plain");
   }
 
   mc.getObject(bucketName, objectName, function (err, dataStream) {
@@ -119,6 +117,7 @@ router.get("/:bucketName/object", (req, res) => {
       res.write(chunk);
     });
     dataStream.on("end", function () {
+      
       res.end();
     });
     dataStream.on("error", function (err) {
