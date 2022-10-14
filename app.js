@@ -4,20 +4,24 @@ const express = require("express");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
 
-const bucketeRoute = require("./routes/bucket.route");
-const authRoute = require("./routes/auth.route");
+const bucketRoute = require("./routes/bucket.route");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/bucket", bucketeRoute);
+app.get('/', (req, res) => {
+  res.send({
+    status: 'success',
+    message: 'Server is running'
+  })
+})
 
-app.use("/auth", authRoute);
+app.use("/bucket", bucketRoute);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
